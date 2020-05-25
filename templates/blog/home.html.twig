@@ -1,0 +1,29 @@
+ {% extends "base.html.twig" %} 
+   {# on herite du template de base 'base.html.twig #}
+
+   {# black body du template base.html.twig #}
+
+  {% block body %} 
+<h1 class="display-4 text-center my-4">{{ title }}</h1>
+
+{# ent un langage de rendu#}
+
+
+{# {{}} double accolade cest ce que l'on appelle une interpolation #}
+
+{# on affiche le contenu de la variable title et age dans la methode hom()#}
+
+{# pour faire appelle a une commande de twig, toujours {% %} #}
+{% if age > 18 %}
+
+ <p>tu es majeur </p>
+
+{% else %}
+
+ <p>tu es mineur </p>
+
+{% endif %}
+
+{% endblock %}
+
+
