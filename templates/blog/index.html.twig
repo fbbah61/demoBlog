@@ -8,34 +8,24 @@
 <h1 class="display-4 text-center my-4">Liste des articles </h1>
 
 <div class="row d-flex justify-content-center">
-      <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-        <img src="https://picsum.photos/250" alt="" class=""><hr>
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-secondary" href="{{ path('blog_show') }}" role="button">View details &raquo;</a></p>
-      </div> 
+    {% for newArticle in articles %}
+    {# {% for newArticle in articles %} for  est une boucle twig , une commande twig
+    la var article provient de la methode index() du controller 'blogcontroller , elle contient tous les articles selectionnes en bdd
+    nous sommes obliges de boucler puisque nous avons selctionner 10 articles en bdd
+    nwarticle est une variable de reception que nous declarons dans la boucle for et qui receptionne un article par tour de boucle
+    #}
+        <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
+            <img src="{{newArticle.image}}" alt="" class="{{newArticle.title}}"><hr>
+            <h2>{{newArticle.title}}</h2>
+            <p>{{newArticle.content|raw}} </p><hr>
+            <p>Poste le {{newArticle.createdAt|date('d/m/Y')}} a {{newArticle.createdAt|date('H:i:s')}}</p>
+            <p><a class="btn btn-secondary" href="{{ path('blog_show',{'id': newArticle.id}) }}" role="button">View details &raquo;</a></p>
+            {# on ajoute un 2e parametre a la methode path de twig afin de transmettre l'id de l'article dans l'url  #}
+        </div> 
 
-      <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-        <img src="https://picsum.photos/250" alt="" class=""><hr>
-
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-secondary" href="{{ path('blog_show') }}" role="button">View details &raquo;</a></p>
-      </div> 
-
-       <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-        <img src="https://picsum.photos/250" alt="" class=""><hr>
-        
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-secondary" href="{{ path('blog_show') }}" role="button">View details &raquo;</a></p>
-      </div>  
-
-      <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-        <img src="https://picsum.photos/250" alt="" class=""><hr>
-        
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a class="btn btn-secondary" href="{{ path('blog_show') }}" role="button">View details &raquo;</a></p>
-      </div>  
+        {# date() filtre twig qui permet d'afficher la date et l'heure #}
+        {# newArticle.createAt: la bdd renvoie un objet datetime , il n'est pas possible de convertir un objet en une chaine de caractere  #}
+        {# sans filtre twig raw , mes balises <p></p> s'affiche , nous utlisons ce filtre pour l'affichage brut #}
+    {% endfor %}
+      
 {% endblock %}
