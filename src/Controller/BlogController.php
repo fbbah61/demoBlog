@@ -4,7 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -58,11 +62,125 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/blog/new", name="blog_create")
+     * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create(Request $request)
+    public function form(Article $article = null, Request $request , EntityManagerInterface $manager)
     {
+        //initialement methode create()
+
+
+        /*la class request est une classe predefinie en symfony qui stockent toutes les donnees vehiculees par les superglobales
+        ($_GET $_POST $_SERVER ...)
+         la prorpiete request represente la superglobale $_POST , les donnees saisies dans le formulaire sont accessibles via cette
+         proprite ça renvoie des parametres (sac de parametres)
+         pour inserre un nvel article , nous devons instancier la class pour avoir un article vide , toutes les propriete private
+         ($titre,$content,$image) ils faut donc les remplir , pour cela nous faisons appel au setter
+         
+         entitymanagerinterface est une methode predefinie de symfonie qui permet de manipuler les liges de la bdd(insert , update
+         
+         persist est une methode issue de la class entitymanagerinterface qui permet de stocker et de preparer la requete sql
+         d'insertion
+         
+         flush est une methode issue de la classe entitymanagerinterface qui permet de liberer la requete d'insertion,c'est elle
+         qui envoie veritablement dans la bdd
+         
+         redirectoroute methode predefinie de symfony qui permet de rediriger vers une route specifique , dans notre cas on redirige
+         apres insertion vers la route blog_show(avec le bon dernier id inserer ) affin de renvoyer vers le detail de l'article qui
+         vient d'etre inserer*/
         dump($request);
-        return $this->render('blog/create.html.twig');      
+        // if($request->request->count() >0)
+        // {
+        //     $article = new Article;
+        //     $article->setTitle($request->request->get('title'))
+        //             ->setContent($request->request->get('content'))
+        //             ->setImage($request->request->get('image'))
+        //             ->setCreatedAt(new \DateTime());
+        //     $manager->persist($article);
+        //     //persiste permet de garder en memoire
+        //     $manager->flush();  
+        //     //flush   
+        //     return $this->redirectToRoute('blog_show' , [
+        //         'id' =>$article->getId()
+        //     ]) ;   
+        // }
+
+        //autrement
+        // $article = new Article;
+
+        // $form = $this->createFormBuilder($article)
+        //              ->add('title', TextType::class, [
+        //                  'attr' => [
+        //                      'placeholder' => "Titre de l'article",
+        //                      'class' => 'form-control mb-3'
+        //                  ]
+        //              ])
+
+        //              ->add('content', TextareaType::class, [
+        //                  'attr' => [
+        //                       'placeholder' => "contenu de l'article",
+        //                       'class' => 'form-control mb-3'
+        //                  ]
+        //              ])
+        //              ->add('image', TextType::class, [
+        //                 'attr' => [
+        //                     'placeholder' => "url de l'image",
+        //                     'class' => 'form-control mb-3'
+        //                 ]
+        //              ])
+        //              ->add('save', SubmitType::class, [
+        //                 'label' => 'Enregistrer'   
+                        
+        //              ])
+        //              ->getForm();
+
+        //autrement
+
+        /*
+        createformulaire est une metode predefini de symfony qui permet de creer un formulaire a partir d'une entite dans notre 
+        cas de la classe article , cela permet aussi de dire que le formulaire permettra de remplir
+        Article $article
+        add() est une methode qui permet de creer les diffrernts champ du formulaire
+        getform() est une methode qui permet de terminer et de valider le formulaire
+        
+        handlerequest est une methode qui permet de recuperer dans notre les info stockee dans l'objet $article
+        plus besoin de faire appel aux setters de la class article
+        */
+        if(!$article)
+        {
+        $article = new Article;
+           
+        }
+
+        // $article->setTitle("Titre à la con")
+        //          ->setContent("contenu de l'article");
+        // //on construit le formulaire
+        $form = $this->createFormBuilder($article)
+                     ->add('title')
+
+                     ->add('content')
+
+                     ->add('image')
+                     
+                     ->getForm();
+        $form->handleRequest($request);
+
+        //soumission du formulaire
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $article->setCreatedAt(new \DateTime());
+            $manager->persist($article);//persist recupere l'objet $article de prepare la requete d'insertion
+            $manager->flush();//flush libere reelement la requete sql d'insertion
+
+            //on redirige apres l'insertion vers le details de l'article que nous venons d'inserer
+            return $this->redirectToRoute('blog_show' , [
+                        'id' =>$article->getId()
+                    ]) ;   
+        }
+
+         //getform permet de valider le formulaire
+        return $this->render('blog/create.html.twig',[
+            'formArticle' => $form->createView()
+        ]);      
     }
 
     /**
