@@ -60,6 +60,13 @@ class BlogController extends AbstractController
       
     }
 
+    /*on declare une route permettant d'inserre un article '/blog/new'
+    on declare une route parametre '/blog/{id}/edit' permettant de modifier un article
+    
+    si nous envoyons un {id} dans l'url, symfony est capable d'aller selectionner en bdd les donnees de l'article, donc
+    l'objet $article nest plus null
+    si nous envoyons dans l'url , a ce moment là $article est bien null*/
+
     /**
      * @Route("/blog/new", name="blog_create")
      * @Route("/blog/{id}/edit", name="blog_edit")
@@ -145,6 +152,9 @@ class BlogController extends AbstractController
         handlerequest est une methode qui permet de recuperer dans notre les info stockee dans l'objet $article
         plus besoin de faire appel aux setters de la class article
         */
+
+        //si l'objet $article n'est pas rempli , cela veut dire que nous n'avons pas envoyer d'{id}dans l'url, alors cest une insertion , on creer un nvel 
+        //des champs du formulaire
         if(!$article)
         {
         $article = new Article;
@@ -167,7 +177,14 @@ class BlogController extends AbstractController
         //soumission du formulaire
         if($form->isSubmitted() && $form->isValid())
         {
-            $article->setCreatedAt(new \DateTime());
+            //si l'article ne possede pas {id}, cela veut dire que que ce nest pas une modif,alors on appel le setteur
+           // date creation de l'article
+            if(!$article->getId())
+            {
+
+               $article->setCreatedAt(new \DateTime());
+              
+            }
             $manager->persist($article);//persist recupere l'objet $article de prepare la requete d'insertion
             $manager->flush();//flush libere reelement la requete sql d'insertion
 
