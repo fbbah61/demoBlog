@@ -7,9 +7,30 @@
         <img src="{{article.image|replace({"250":"900/300"})}}" alt="{{article.title}}" class=""><hr>
         <h2>{{article.title}}</h2>
         <p>{{article.content|raw}} </p><hr>
-        <p class="text-rigth">Poste le {{article.createdAt|date('d/m/Y')}} a {{article.createdAt|date('H:i:s')}} </p>
-        
+        <p class="text-rigth">Poste le {{article.createdAt|date('d/m/Y')}} a {{article.createdAt|date('H:i:s')}} dans la categorie 
+        <strong>{{ article.category.title }}</strong> </p>
+        {# avec les relations entre tables nous avons maintenant acces la categorie lie a l'article et ns avons aussi acces au commentaires lies a l'article (relation bi-directionnelle 
+         : via l'entite article ns avons acces a l'entite categoriesvet comment puisque ces entites sont reliees entre elles) #}
       </div> 
-   <a href="{{ path('blog')}}" class="btn btn-primary"> pour revenir sur les articles cliquez ici</a>
+   <a href="{{ path('blog')}}" class="btn btn-primary mb-5"> pour revenir sur les articles cliquez ici</a>
 
+  <h2 class="text-center"> Commentaires </h2>
+  <div class="col-md-12">
+{# ns avons acces au commentaires de l'article via l'entite article #}
+{# comment variable de recption (declarer ici )qui receptionne une ligne de commentaire par tour de boucle#}
+
+{# article.comments on pointe sur l'indice 'comments' se l'objet article qui contient tous les commentaires lies a l'article#}
+
+    {% for comment in article.comments  %}
+        <div class="row border rounded mb-2">
+          <div class="col-md-4">
+              <span>{{ comment.author }} </span>
+              <small class="font-italic"> ({{ comment.createdAt|date('d/m/Y à H:i:s')}})</small>
+          </div>
+          <div class="col-md-8">
+              <p>{{ comment.content|raw}}</p>
+          </div>
+        </div>      
+    {% endfor %}
+    </div>
 {% endblock %}

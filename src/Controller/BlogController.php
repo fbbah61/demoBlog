@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -164,19 +165,24 @@ class BlogController extends AbstractController
         // $article->setTitle("Titre à la con")
         //          ->setContent("contenu de l'article");
         // //on construit le formulaire
-        $form = $this->createFormBuilder($article)
-                     ->add('title')
+        // $form = $this->createFormBuilder($article)
+        //              ->add('title')
 
-                     ->add('content')
+        //              ->add('content')
 
-                     ->add('image')
+        //              ->add('image')
                      
-                     ->getForm();
+        //              ->getForm();
+
+        /* permet de faire appela la class articletype permettent de generer le formulaire d'ajout/modification
+          on precise que ce formulaire permettra de remplir un objet issue de la classe article $article */
+    $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         //soumission du formulaire
         if($form->isSubmitted() && $form->isValid())
         {
+            
             //si l'article ne possede pas {id}, cela veut dire que que ce nest pas une modif,alors on appel le setteur
            // date creation de l'article
             if(!$article->getId())
@@ -196,7 +202,9 @@ class BlogController extends AbstractController
 
          //getform permet de valider le formulaire
         return $this->render('blog/create.html.twig',[
-            'formArticle' => $form->createView()
+            'formArticle' => $form->createView(),
+            'editMode' => $article->getId() != null //on test un article qui possede un id ou non , si l'article possede un id c'est une modification , si il n'a pas d'id cest une insertion
+
         ]);      
     }
 
