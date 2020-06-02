@@ -42,11 +42,19 @@
 
       {{ form_row(formArticle.title, { 'attr' : {'placeholder': "Titre de l'article",}}) }}
 
+      {{ form_row(formArticle.category) }}
+
       {{ form_row(formArticle.content, { 'attr' : {'placeholder': "Contenu de l'article", "rows": 5}}) }}
 
       {{ form_row(formArticle.image, { 'attr' : {'placeholder': "url de l'article"}}) }}
 
-    <button type="submit" class="btn btn-primary">Ajouter un Article </button>
+    <button type="submit" class="btn btn-primary">
+     {% if editMode %}
+      Enregistrer les  modifications
+     {% else %}
+        ajouter l' article
+     {% endif %}
+    </button>
   {{ form_end(formArticle)}}
 
 

@@ -17,7 +17,8 @@
         <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
             <img src="{{newArticle.image}}" alt="" class="{{newArticle.title}}"><hr>
             <h2>{{newArticle.title}}</h2>
-            <p>{{newArticle.content|raw}} </p><hr>
+            <p>{{newArticle.content|slice(3,200)|raw}}... </p><hr>
+            {# slice(3.200) fonction twig qui retourne une partie de la chaine de caracter #}
             <p>Poste le {{newArticle.createdAt|date('d/m/Y')}} a {{newArticle.createdAt|date('H:i:s')}}</p>
             <p><a class="btn btn-secondary" href="{{ path('blog_show',{'id': newArticle.id}) }}" role="button">View details &raquo;</a></p>
             {# on ajoute un 2e parametre a la methode path de twig afin de transmettre l'id de l'article dans l'url  #}
