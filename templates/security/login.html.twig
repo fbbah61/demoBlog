@@ -1,11 +1,21 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+
 <h1 class="display-4 text-center my-4">Identifiez-vous</h1>
+{# si ilya une erreur des identifiants de connexion , alors on entre dans le if eyt on affiche le message d'erreur #}
+{# error est une variable twig qui vient du controller securitycontroller #}
+{% if error %}
+ <p class="bg-danger text-white text-center p-3 col-md-4 mx-auto rounded">{{ error.messagekey|trans(error.messageData, 'security') }} </p>
+ {# tans(error.messageData,'security') : on indique a twig que la traduction d'erreur 'Invalid credentials.' se trouve dans le ficheier 'tanslations.en.php #}
+  
+{% endif %}
+
 <form method="post" class="col-md-5 mx-auto" action="{{ path('security_login') }}"> 
   <div class="form-group">
     <label for="_username">Email</label>
     <input type="text" class="form-control" id="_username" name="_username" >
+  
   </div>
   <div class="form-group">
     <label for="_password">Mot de passe</label>
