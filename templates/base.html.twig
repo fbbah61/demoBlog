@@ -22,6 +22,16 @@
 
             <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav mr-auto">
+                {# si l'internaute n'est pas connecter on lui propose de s'inscrire ou de s'idendifier #}
+                {% if not app.user %}
+                    <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('security_login')}}">Identifiez-vous <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('security_registration')}}">Creer un Compte<span class="sr-only">(current)</span></a>
+                    </li>
+                {% endif %}
+                
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path('blog_create') }}">Creer un Article <span class="sr-only">(current)</span></a>
                 {# path() est une fonction twig permettant de generer une url en fonction du nom de la route envoyer en argument#}
@@ -31,9 +41,7 @@
                     <a class="nav-link" href="{{ path('blog') }}">Article <span class="sr-only">(current)</span></a>
                 {# path() est une fonction twig permettant de generer une url en fonction du nom de la route envoyer en argument#}
                 {# le nom de la route blog est declaree dans le controller blogcontroller et est rattachee a la methode index() #}
-                </li>
-                
-                
+                </li>        
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catégorie</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
@@ -42,12 +50,27 @@
                         <a class="dropdown-item" href="#">Sport</a>
                     </div>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('easyadmin')}}">BackOffice <span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
+                {# app: var predefinie en twig qui contient beaucou de var d'environnement($_post $_get $_session) #}
+                {# app.user: retourne les infos de la session en cours , cest a dire les infos de l'utilisateur qui est connecter #}
+                {# si  app.user renvoie true , alors l'internaute est connecter , on entre dans le if , on lui propose le lien de deconnexion #}
+                {% if app.user %}
+ 
+                <li class="nav-item active">
+                 <a class="nav-link" href="{{ path('security_logout')}}">Deconnexion <span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
                 </ul>
                 <form class="form-inline my-2 my-md-0">
                 <input class="form-control" type="text" placeholder="Search">
                 </form>
             </div>
         </nav>
+
         <div class="container mon-container">
         {% block body %}
 
